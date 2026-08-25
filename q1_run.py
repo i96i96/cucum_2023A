@@ -15,14 +15,17 @@
 
 import os
 import time
+import json
 import numpy as np
 import pandas as pd
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-
-plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei']
-plt.rcParams['axes.unicode_minus'] = False
+try:
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei']
+    plt.rcParams['axes.unicode_minus'] = False
+except ModuleNotFoundError:
+    plt = None
 
 from q1_model import (NeighborIndex, sun_direction, dni, mirror_pose,
                       cosine_efficiency, atmospheric_transmittance,
@@ -178,6 +181,21 @@ def main():
     table.to_csv('q1_table1.csv', index=False, encoding='utf-8-sig')
 
     annual_unit = annual_power_total / (N * MIRROR_AREA)
+    summary = {
+        'model': 'original',
+        'receiver_center_z_m': float(RECEIVER_CZ),
+        'mirror_count': int(N),
+        'mirror_area_total_m2': float(N * MIRROR_AREA),
+        'annual_optical_efficiency': float(annual_eta_opt),
+        'annual_cosine_efficiency': float(month_eta_cos.mean()),
+        'annual_shadow_blocking_efficiency': float(month_eta_sb.mean()),
+        'annual_truncation_efficiency': float(month_eta_trunc.mean()),
+        'annual_output_power_mw': float(annual_power_total / 1e3),
+        'annual_unit_area_power_kw_m2': float(annual_unit),
+    }
+    with open('q1_summary_original.json', 'w', encoding='utf-8') as f:
+        json.dump(summary, f, ensure_ascii=False, indent=2)
+
     print('\n================ 问题 1 结果 ================')
     print(table.to_string(index=False))
     print('-----------------------------------------------')
@@ -188,8 +206,11 @@ def main():
     print(f'耗时                     : {time.time() - t0:.1f} s')
 
     # ---- 绘图 ----
-    plot_figures(xs, ys, k, month_names, month_eta_opt, month_eta_cos,
-                 month_eta_sb, month_eta_trunc, month_power_area, shadow_map)
+    if plt is not None:
+        plot_figures(xs, ys, k, month_names, month_eta_opt, month_eta_cos,
+                     month_eta_sb, month_eta_trunc, month_power_area, shadow_map)
+    else:
+        print('\n[图表] 未安装 matplotlib，跳过绘图；数值结果已完整输出。')
 
 
 def plot_figures(xs, ys, k, month_names, eta_opt, eta_cos, eta_sb, eta_trunc,

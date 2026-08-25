@@ -54,3 +54,23 @@ xelatex q1_paper.tex
 ## 数据来源说明
 
 题目、附录与数据来自 2023 年高教社杯全国大学生数学建模竞赛官方公开资料，仅用于学习与建模练习。
+
+## 问题一修正版评价器
+
+在保留原始 `q1_model.py` 与原结果的前提下，新增：
+
+- `q1_model_fixed.py`：修正接收器中心高度、入射阴影回溯方向，并用确定性面积采样计算遮挡；
+- `q1_run_fixed.py`：使用低差异太阳盘采样和真实竖直圆柱侧面求交统一计算截断效率，并按题面定义在未遮挡镜面区域上条件统计；
+- `q1_compare_results.py`：输出原模型与修正版的年度、月度差异及收敛性表；
+- `test_q1_model_fixed.py`：几何方向、反射定律、圆柱求交和确定性采样单元测试。
+
+推荐复现顺序：
+
+```bash
+python q1_run.py
+python q1_run_fixed.py
+python q1_compare_results.py
+python -m unittest -v test_q1_model_fixed.py
+```
+
+修正版默认使用 11x11 镜面网格、128 条低差异太阳盘光线和 60 m 邻域半径。默认完整运行约需数分钟；可通过命令行参数降低采样数进行调试。

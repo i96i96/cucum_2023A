@@ -1,0 +1,12 @@
+{
+  "model": "original",
+  "receiver_center_z_m": 84.0,
+  "mirror_count": 1745,
+  "mirror_area_total_m2": 62820.0,
+  "annual_optical_efficiency": 0.5759352237428953,
+  "annual_cosine_efficiency": 0.7599022163792276,
+  "annual_shadow_blocking_efficiency": 0.895802822880187,
+  "annual_truncation_efficiency": 0.9664164099654459,
+  "annual_output_power_mw": 35.271477280323474,
+  "annual_unit_area_power_kw_m2": 0.5614689156371135
+}

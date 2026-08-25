@@ -19,3 +19,7 @@ __pycache__/
 # 临时文件
 *_rgb.jpg
 附录*.png
+
+# 问题一评价器的本地中间运行结果（最终结果保留在 output/q1_final/）
+output/q1_fixed/
+output/q1_sensitivity/
